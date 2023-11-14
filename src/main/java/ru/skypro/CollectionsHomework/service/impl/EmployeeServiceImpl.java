@@ -17,7 +17,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee add(String firstname, String lastname) {
         if (employees.size() >= limit) {
-            throw new EmployeeStorageIsFullException("Превышено допустимое количество сотрудников!");
+            throw new EmployeeStorageIsFullException(
+                    "Превышено допустимое количество сотрудников! Допустимое количество: " + limit);
         }
         Employee employee = new Employee(firstname, lastname);
         if (employees.contains(employee)) {
