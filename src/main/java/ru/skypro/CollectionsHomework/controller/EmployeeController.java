@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.skypro.CollectionsHomework.model.Employee;
 import ru.skypro.CollectionsHomework.service.EmployeeService;
 
-import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("employees")
@@ -31,14 +31,16 @@ public class EmployeeController {
             @RequestParam("lastname") String lastname) {
         return employeeService.remove(firstname, lastname);
     }
+
     @GetMapping("find")
     public Employee find(
             @RequestParam("firstname") String firstname,
             @RequestParam("lastname") String lastname) {
         return employeeService.find(firstname, lastname);
     }
+
     @GetMapping
-    public List <Employee> getAll(){
+    public Map<String, Employee> getAll() {
         return employeeService.getAll();
     }
 }
