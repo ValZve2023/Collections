@@ -1,5 +1,6 @@
 package ru.skypro.CollectionsHomework.service.impl;
 
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import ru.skypro.CollectionsHomework.exception.EmployeeAlreadyAddedException;
 import ru.skypro.CollectionsHomework.exception.EmployeeNotFoundException;
@@ -11,11 +12,20 @@ import java.util.*;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
+
     private final int limit = 5;
+
+    @PostConstruct
+    public void initEmployees() {
+        add("Ivan", "Ivanov", 45000, 1);
+        add("Dmitriy", "Kuplinov", 80000, 2);
+        add("Vasya", "Pupkin", 60000, 1);
+        add("Sergeev", "Sergey", 50000, 2);
+    }
     private final Map<String, Employee> employees = new HashMap<>();
 
     @Override
-    public Employee add(String firstname, String lastname) {
+    public Employee add(String firstname, String lastname, Integer salary, Integer department) {
         if (employees.size() >= limit) {
             throw new EmployeeStorageIsFullException(
                     "Превышено допустимое количество сотрудников! Допустимое количество: " + limit);
@@ -24,7 +34,7 @@ public class EmployeeServiceImpl implements EmployeeService {
         if (employees.containsKey(getKey(firstname, lastname))) {
             throw new EmployeeAlreadyAddedException("Такой сотрудник уже существует!");
         }
-        Employee employee = new Employee(firstname, lastname);
+        Employee employee = new Employee(firstname, lastname, salary, department);
         employees.put(getKey(employee), employee);
         return employee;
     }

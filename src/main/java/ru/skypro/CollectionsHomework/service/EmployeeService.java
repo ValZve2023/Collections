@@ -5,8 +5,11 @@ import ru.skypro.CollectionsHomework.model.Employee;
 import java.util.Map;
 
 public interface EmployeeService {
-    Employee add(String firstname, String lastname);
+
+    Employee add(String firstname, String lastname, Integer salary, Integer department);
+
     Employee remove(String firstname, String lastname);
+
     Employee find(String firstname, String lastname);
 
     Map<String, Employee> getAll();
