@@ -1,10 +1,12 @@
 package ru.skypro.CollectionsHomework.service.impl;
 
 import jakarta.annotation.PostConstruct;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import ru.skypro.CollectionsHomework.exception.EmployeeAlreadyAddedException;
 import ru.skypro.CollectionsHomework.exception.EmployeeNotFoundException;
 import ru.skypro.CollectionsHomework.exception.EmployeeStorageIsFullException;
+import ru.skypro.CollectionsHomework.exception.InvalidNameException;
 import ru.skypro.CollectionsHomework.model.Employee;
 import ru.skypro.CollectionsHomework.service.EmployeeService;
 
@@ -22,10 +24,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         add("Vasya", "Pupkin", 60000, 1);
         add("Sergeev", "Sergey", 50000, 2);
     }
+
     private final Map<String, Employee> employees = new HashMap<>();
 
     @Override
     public Employee add(String firstname, String lastname, Integer salary, Integer department) {
+        validateNames(firstname, lastname);
         if (employees.size() >= limit) {
             throw new EmployeeStorageIsFullException(
                     "Превышено допустимое количество сотрудников! Допустимое количество: " + limit);
@@ -41,6 +45,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee remove(String firstname, String lastname) {
+        validateNames(lastname, firstname);
         if (!employees.containsKey(getKey(firstname, lastname))) {
             throw new EmployeeNotFoundException("Сотрудник " + firstname + " " + lastname + " не найден!");
         }
@@ -49,6 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     @Override
     public Employee find(String firstname, String lastname) {
+        validateNames(firstname, lastname);
         Employee employee = employees.get(getKey(firstname, lastname));
         if (employee == null) {
             throw new EmployeeNotFoundException("Сотрудник " + firstname + " " + lastname + " не найден!");
@@ -62,10 +68,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     private static String getKey(String firstname, String lastname) {
-        return firstname + lastname;
+        return (firstname + "_" + lastname).toLowerCase();
     }
 
     private static String getKey(Employee employee) {
         return employee.getFirstname() + employee.getLastname();
+    }
+
+    private void validateNames(String... names) {
+        for (String name : names) {
+            if (!StringUtils.isAlpha(name)) {
+                throw new InvalidNameException(name + " is invalid");
+            }
+        }
     }
 }

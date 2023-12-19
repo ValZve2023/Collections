@@ -1,5 +1,7 @@
 package ru.skypro.CollectionsHomework.model;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Objects;
 
 public class Employee {
@@ -9,8 +11,8 @@ public class Employee {
     private final int department;
 
     public Employee(String firstname, String lastname, int salary, int department) {
-        this.firstname = firstname;
-        this.lastname = lastname;
+        this.firstname = StringUtils.capitalize(firstname);
+        this.lastname = StringUtils.capitalize(lastname);
         this.salary = salary;
         this.department = department;
     }
